@@ -74,7 +74,7 @@ public final class PortalApiLinkHelper {
 
     private static String resourcesURL(UriBuilder baseUriBuilder, String resourceId, String resourceName,
             String subResourceId, String subResourceName) {
-        UriBuilder resourcesURLBuilder = baseUriBuilder.path(GraviteeContext.getCurrentEnvironment())
+        UriBuilder resourcesURLBuilder = baseUriBuilder.path("organizations").path(GraviteeContext.getCurrentOrganization()).path("environments").path(GraviteeContext.getCurrentEnvironment())
                 .path(resourceName);
         if (resourceId != null && !resourceId.isEmpty()) {
             resourcesURLBuilder = resourcesURLBuilder.path(resourceId);

@@ -68,4 +68,6 @@ public interface PageService {
 	void transformWithTemplate(PageEntity pageEntity, String api);
 
 	PageEntity create(String apiId, PageEntity pageEntity);
+	
+	void createDefaultPages(String environmentId);
 }

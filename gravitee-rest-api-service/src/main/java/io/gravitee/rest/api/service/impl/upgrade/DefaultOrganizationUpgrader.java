@@ -21,37 +21,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
-import io.gravitee.rest.api.service.ApiHeaderService;
+import io.gravitee.rest.api.service.OrganizationService;
 import io.gravitee.rest.api.service.Upgrader;
-import io.gravitee.rest.api.service.common.GraviteeContext;
 
 /**
- * @author Nicolas GERAUD (nicolas.geraud at graviteesource.com)
+ * @author Florent CHAMFROY (florent.chamfroy at graviteesource.com)
  * @author GraviteeSource Team
  */
 @Component
-public class DefaultApiHeaderUpgrader implements Upgrader, Ordered {
+public class DefaultOrganizationUpgrader implements Upgrader, Ordered {
 
     /**
      * Logger.
      */
-    private final Logger logger = LoggerFactory.getLogger(DefaultApiHeaderUpgrader.class);
+    private final Logger logger = LoggerFactory.getLogger(DefaultOrganizationUpgrader.class);
 
     @Autowired
-    private ApiHeaderService apiHeaderService;
+    private OrganizationService organizationService;
 
     @Override
     public boolean upgrade() {
-        // Initialize default headers
-        if (apiHeaderService.findAll().size() == 0) {
-            logger.info("Create default API Headers configuration for default environment");
-            apiHeaderService.createDefault(GraviteeContext.getDefaultEnvironment());
+        // initialize roles.
+        if (organizationService.findAll().isEmpty()) {
+            logger.info("    No organization found. Add default one.");
+            organizationService.createDefaultOrganization();
         }
         return true;
     }
 
+
     @Override
     public int getOrder() {
-        return 300;
+        return 100;
     }
 }

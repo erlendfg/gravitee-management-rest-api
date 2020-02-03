@@ -369,6 +369,10 @@ public class PageServiceImpl extends TransactionalService implements PageService
 
 	@Override
 	public PageEntity createPage(String apiId, NewPageEntity newPageEntity) {
+	    return this.createPage(apiId, newPageEntity, GraviteeContext.getCurrentEnvironment());
+	}
+	
+	private PageEntity createPage(String apiId, NewPageEntity newPageEntity, String environmentId) {
 		try {
 			logger.debug("Create page {} for API {}", newPageEntity, apiId);
 
@@ -420,7 +424,7 @@ public class PageServiceImpl extends TransactionalService implements PageService
 
 			page.setId(id);
 			if(StringUtils.isEmpty(apiId)) {
-			    page.setReferenceId(GraviteeContext.getCurrentEnvironment());
+			    page.setReferenceId(environmentId);
                 page.setReferenceType(PageReferenceType.ENVIRONMENT);
 			} else {
 			    page.setReferenceId(apiId);
@@ -1600,4 +1604,20 @@ public class PageServiceImpl extends TransactionalService implements PageService
 		}
 		return builder.build();
 	}
+
+    @Override
+    public void createDefaultPages(String environmentId) {
+        createSystemFolder(SystemFolderType.HEADER, 1, environmentId);
+        createSystemFolder(SystemFolderType.FOOTER, 2, environmentId);
+        createSystemFolder(SystemFolderType.SUBFOOTER, 3, environmentId);
+    }
+	
+    private PageEntity createSystemFolder(SystemFolderType systemFolderType, int order, String environmentId) {
+        NewPageEntity newSysFolder = new NewPageEntity();
+        newSysFolder.setName(systemFolderType.folderName());
+        newSysFolder.setOrder(order);
+        newSysFolder.setPublished(true);
+        newSysFolder.setType(PageType.SYSTEM_FOLDER);
+        return this.createPage(null, newSysFolder, environmentId);
+    }
 }
